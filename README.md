@@ -25,7 +25,7 @@ The following is the list of the problems solved. Each problem identifier is spe
 ### Qualification Round
 
 * ✓ [10: Boomerang Constellations][qual1] (`boomerang-constellation`)
-* ✗ [25: High Security][qual2] (`high-security`)
+* ✓ [25: High Security][qual2] (`high-security`)
 * ✓ [25: The Price is Correct][qual3] (`the-price-is-correct`)
 * ✓ [40: Text Editor][qual4] (`text-editor`) [*]
 

@@ -10,6 +10,7 @@ char grid[2][MAXN];
 int guards;
 
 int isSingle(int i, int j) {
+  if(grid[i][j] != '.') return false;
   if(j == 0) return grid[i][j + 1] == 'X';
   if(j == n - 1) return grid[i][j - 1] == 'X';
   return grid[i][j + 1] == 'X' && grid[i][j - 1] == 'X';
