@@ -31,8 +31,19 @@ The following is the list of the problems solved. Each problem identifier is spe
 
 [*] This solution requires an increased stack size. In Unix systems you can remove the stack size cap with the command `ulimit -s unlimited`. The change applies only to processes running in the shell in which the command is executed.
 
+### Round 1
+
+* ✗ [15: Coding Contest Creation][round11] (`coding-contest-creation`)
+* ✓ [20: Laundro, Matt][round12] (`laundro-matt`)
+* ✓ [25: Yachtzee][round13] (`yachtzee`)
+* ✓ [40: Boomerang Tournament][round14] (`boomerang-tournament`)
+
 [1]: https://www.facebook.com/hackercup
 [qual1]: https://www.facebook.com/hackercup/problem/910374079035613/
 [qual2]: https://www.facebook.com/hackercup/problem/1527664744192390/
 [qual3]: https://www.facebook.com/hackercup/problem/881509321917182/
 [qual4]: https://www.facebook.com/hackercup/problem/1525154397757404/
+[round11]: https://www.facebook.com/hackercup/problem/798506286925018/
+[round12]: https://www.facebook.com/hackercup/problem/1611251319125133/
+[round13]: https://www.facebook.com/hackercup/problem/512731402225321/
+[round14]: https://www.facebook.com/hackercup/problem/1424196571244550/
