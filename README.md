@@ -33,7 +33,7 @@ The following is the list of the problems solved. Each problem identifier is spe
 
 ### Round 1
 
-* ✗ [15: Coding Contest Creation][round11] (`coding-contest-creation`)
+* ✓ [15: Coding Contest Creation][round11] (`coding-contest-creation`)
 * ✓ [20: Laundro, Matt][round12] (`laundro-matt`)
 * ✓ [25: Yachtzee][round13] (`yachtzee`)
 * ✓ [40: Boomerang Tournament][round14] (`boomerang-tournament`)
