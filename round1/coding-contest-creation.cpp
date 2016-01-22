@@ -1,3 +1,4 @@
+#include <cstring>
 #include <iostream>
 
 #define MAXN 100000
