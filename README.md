@@ -41,7 +41,7 @@ The following is the list of the problems solved. Each problem identifier is spe
 ### Round 2
 
 * ✓ [15: Boomerang Decoration][round21] (`boomerang-decoration`)
-* ✗ [20: Carnival Coins][round22] (`carnival-coins`)
+* ✓ [20: Carnival Coins][round22] (`carnival-coins`)
 * ✓ [25: Snakes and Ladders][round23] (`snakes-and-ladders`)
 
 [1]: https://www.facebook.com/hackercup

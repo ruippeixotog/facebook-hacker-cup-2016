@@ -17,12 +17,14 @@
 
 using namespace std;
 
-ld cumProbs[MAXN];
+ld dp[MAXN];
 
 int main() {
   int t; cin >> t;
   for(int tc = 1; tc <= t; tc++) {
     int n, k; ld p; cin >> n >> k >> p;
+
+    memset(dp, 0, sizeof(dp));
 
     for(int i = k; i <= n; i++) {
       ld lastPmf = log(1 - p) * i;
@@ -33,34 +35,13 @@ int main() {
         cumProb += exp(lastPmf);
       }
 
-      cumProbs[i] = 1.0 - cumProb;
-      // cerr << i << ": " << cumProbs[i] << endl;
-    }
-
-    ld best = 0.0;
-    for(int i = k; i <= n; i++) {
-      int rem = n % i;
-
-      ld prob = cumProbs[i] * (n / i);
-      for(int j = 1; j <= min(rem, n / i); j++) {
-        int divRem = rem / j;
-        int remRem = rem % j;
-
-        prob = max(prob, cumProbs[i] * (n / i - j)
-          + cumProbs[i + divRem] * (j - remRem)
-          + cumProbs[i + divRem + 1] * remRem);
+      dp[i] = 1.0 - cumProb;
+      for(int j = 1; j <= i / 2; j++) {
+        dp[i] = max(dp[i], dp[j] + dp[i - j]);
       }
-
-      // cerr << i << ": " << rem << " " << (i / k) << endl;
-      // ld prob = cumProbs[i] * (n / i - 1) + cumProbs[i + rem];
-      // ld prob2 = cumProbs[i] * (n / i - rem) + cumProbs[i + 1] * rem;
-      // cerr << i << " total: " << prob << endl;
-
-      // if(best2 > best) cerr << "best is " << i << " rem " << rem << endl;
-      best = max(best, prob);
     }
 
-    cout << "Case #" << tc << ": " << fixed << setprecision(9) << best << endl;
+    cout << "Case #" << tc << ": " << fixed << setprecision(9) << dp[n] << endl;
   }
   return 0;
 }
