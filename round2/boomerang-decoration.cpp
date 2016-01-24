@@ -1,12 +1,6 @@
 #include <algorithm>
-#include <cstring>
 #include <iostream>
-#include <map>
-#include <queue>
-#include <set>
 #include <string>
-#include <utility>
-#include <vector>
 
 #define ll long long
 #define ld long double
