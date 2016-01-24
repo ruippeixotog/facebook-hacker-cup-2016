@@ -6,6 +6,7 @@
 #define ld long double
 
 #define MAXN 100000
+#define INF 1e9
 
 using namespace std;
 
@@ -27,7 +28,7 @@ int main() {
       dpRight[i] = dpRight[i + 1] + (b[i] != b[i + 1]);
     }
 
-    int best = 1e9;
+    int best = INF;
     for(int i = 0; i < n - 1; i++) {
       int l = i, r = i + 1;
       while(l >= 0 && a[l] == b[l]) l--;
