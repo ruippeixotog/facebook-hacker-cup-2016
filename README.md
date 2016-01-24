@@ -38,6 +38,12 @@ The following is the list of the problems solved. Each problem identifier is spe
 * ✓ [25: Yachtzee][round13] (`yachtzee`)
 * ✓ [40: Boomerang Tournament][round14] (`boomerang-tournament`)
 
+### Round 2
+
+* ✓ [15: Boomerang Decoration][round21] (`boomerang-decoration`)
+* ✗ [20: Carnival Coins][round22] (`carnival-coins`)
+* ✓ [25: Snakes and Ladders][round23] (`snakes-and-ladders`)
+
 [1]: https://www.facebook.com/hackercup
 [qual1]: https://www.facebook.com/hackercup/problem/910374079035613/
 [qual2]: https://www.facebook.com/hackercup/problem/1527664744192390/
@@ -47,3 +53,6 @@ The following is the list of the problems solved. Each problem identifier is spe
 [round12]: https://www.facebook.com/hackercup/problem/1611251319125133/
 [round13]: https://www.facebook.com/hackercup/problem/512731402225321/
 [round14]: https://www.facebook.com/hackercup/problem/1424196571244550/
+[round21]: https://www.facebook.com/hackercup/problem/424794494381569/
+[round22]: https://www.facebook.com/hackercup/problem/1627951250755660/
+[round23]: https://www.facebook.com/hackercup/problem/1640119959603837/
