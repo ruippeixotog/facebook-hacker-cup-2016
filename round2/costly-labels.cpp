@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <queue>
+#include <utility>
 #include <vector>
 
 #define MAXN 1000
@@ -24,39 +26,51 @@ int gn, cn;
 vector<int> gadjs[MAXGN];
 int cost[MAXGN][MAXGN];
 
-int dist[MAXGN], parent[MAXGN];      // shortest path
-bool flow[MAXGN][MAXGN];             // mcmf
+int dist[MAXGN], parent[MAXGN], pi[MAXGN];  // shortest path
+bool flow[MAXGN][MAXGN];                    // mcmf
 
-int bellmanFord(int src, int dest) {
+inline int pot(int u, int v) { return dist[u] + pi[u] - pi[v]; }
+
+int dijkstra(int src, int dest) {
   memset(dist, 0x3f, sizeof(dist));
   memset(parent, -1, sizeof(parent));
-  dist[src] = 0;
 
-  for(int m = 0; m < gn; m++) {
-    for(int i = 0; i < gn; i++) {
-      for(int j = 0; j < gadjs[i].size(); j++) {
-        int adj = gadjs[i][j];
+  priority_queue<pair<int, int>> q;
+  q.push(make_pair(0, src)); dist[src] = 0;
 
-        if(!flow[i][adj] && dist[i] + cost[i][adj] < dist[adj]) {
-          dist[adj] = dist[i] + cost[i][adj];
-          parent[adj] = i;
-        }
+  while(!q.empty()) {
+    int curr = q.top().second; q.pop();
 
-        if(flow[adj][i] && dist[i] - cost[adj][i] < dist[adj]) {
-          dist[adj] = dist[i] - cost[adj][i];
-          parent[adj] = i;
-        }
+    if(parent[curr] >= 0) continue;
+    parent[curr] = -parent[curr] - 1;
+
+    for(int adj : gadjs[curr]) {
+      if(parent[adj] >= 0) continue;
+
+      if(flow[adj][curr] && pot(curr, adj) - cost[adj][curr] < dist[adj]) {
+        dist[adj] = pot(curr, adj) - cost[adj][curr];
+        parent[adj] = -curr - 1;
+        q.push(make_pair(-dist[adj], adj));
+      }
+
+      if(!flow[curr][adj] && pot(curr, adj) + cost[curr][adj] < dist[adj]) {
+        dist[adj] = pot(curr, adj) + cost[curr][adj];
+        parent[adj] = -curr - 1;
+        q.push(make_pair(-dist[adj], adj));
       }
     }
   }
+
+  for(int i = 0; i < gn; i++) { pi[i] += dist[i]; }
   return dist[dest];
 }
 
 int mcmf(int src, int sink) {
   memset(flow, false, sizeof(flow));
+  memset(pi, 0, sizeof(pi));
 
   int minCost = 0;
-  while(bellmanFord(src, sink) < INF) {
+  while(dijkstra(src, sink) < INF) {
     for(int v = sink, u = parent[v]; v != src; u = parent[v = u]) {
       if(flow[v][u]) { flow[v][u] = false; minCost -= cost[v][u]; }
       else { flow[u][v] = true; minCost += cost[u][v]; }
