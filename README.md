@@ -43,6 +43,7 @@ The following is the list of the problems solved. Each problem identifier is spe
 * ✓ [15: Boomerang Decoration][round21] (`boomerang-decoration`)
 * ✓ [20: Carnival Coins][round22] (`carnival-coins`)
 * ✓ [25: Snakes and Ladders][round23] (`snakes-and-ladders`)
+* ✗ [40: Costly Labels][round24] (`costly-labels`)
 
 [1]: https://www.facebook.com/hackercup
 [qual1]: https://www.facebook.com/hackercup/problem/910374079035613/
@@ -56,3 +57,4 @@ The following is the list of the problems solved. Each problem identifier is spe
 [round21]: https://www.facebook.com/hackercup/problem/424794494381569/
 [round22]: https://www.facebook.com/hackercup/problem/1627951250755660/
 [round23]: https://www.facebook.com/hackercup/problem/1640119959603837/
+[round24]: https://www.facebook.com/hackercup/problem/566729860132273/
