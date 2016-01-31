@@ -1,8 +1,6 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
-#include <queue>
-#include <utility>
 #include <vector>
 
 #define MAXN 1000
@@ -17,107 +15,81 @@ vector<int> adjs[MAXN];
 
 int dp[MAXN][MAXK][MAXK];
 
-// --- start min-cost max flow
+// --- start kuhn-munkres
 
-#define MAXGN (MAXN + MAXK + 2)
+int w[MAXK][MAXK], s[MAXK], rem[MAXK], remx[MAXK];
+int mx[MAXK], my[MAXK], lx[MAXK], ly[MAXK];
 
-int gn, cn;
+void kuhnAdd(int x, int n) {
+  s[x] = true;
+  for(int y = 0; y < n; y++)
+    if(rem[y] != -INF && rem[y] > lx[x] + ly[y] - w[x][y])
+      rem[y] = lx[x] + ly[y] - w[x][y], remx[y] = x;
+}
 
-vector<int> gadjs[MAXGN];
-int cost[MAXGN][MAXGN];
+int kuhnMunkres(int n) {
+  for(int i = 0; i < n; i++) {
+    mx[i] = my[i] = -1;
+    lx[i] = ly[i] = 0;
+  }
+  for(int i = 0; i < n; i++) {
+    for(int j = 0; j < n; j++)
+      ly[j] = max(ly[j], w[i][j]);
+  }
+  for(int i = 0; i < n; i++) {
+    memset(s, 0, sizeof(s));
+    memset(rem, 0x3f, sizeof(rem));
 
-int dist[MAXGN], parent[MAXGN], pi[MAXGN];  // shortest path
-bool flow[MAXGN][MAXGN];                    // mcmf
-
-inline int pot(int u, int v) { return dist[u] + pi[u] - pi[v]; }
-
-int dijkstra(int src, int dest) {
-  memset(dist, 0x3f, sizeof(dist));
-  memset(parent, -1, sizeof(parent));
-
-  priority_queue<pair<int, int>> q;
-  q.push(make_pair(0, src)); dist[src] = 0;
-
-  while(!q.empty()) {
-    int curr = q.top().second; q.pop();
-
-    if(parent[curr] >= 0) continue;
-    parent[curr] = -parent[curr] - 1;
-
-    for(int adj : gadjs[curr]) {
-      if(parent[adj] >= 0) continue;
-
-      if(flow[adj][curr] && pot(curr, adj) - cost[adj][curr] < dist[adj]) {
-        dist[adj] = pot(curr, adj) - cost[adj][curr];
-        parent[adj] = -curr - 1;
-        q.push(make_pair(-dist[adj], adj));
+    int st;
+    for(st = 0; st < n; st++) {
+      if(mx[st] == -1) { kuhnAdd(st, n); break; }
+    }
+    while(mx[st] == -1) {
+      int miny = -1;
+      for(int y = 0; y < n; y++) {
+        if(rem[y] != -INF && (miny == -1 || rem[miny] >= rem[y]))
+          miny = y;
       }
 
-      if(!flow[curr][adj] && pot(curr, adj) + cost[curr][adj] < dist[adj]) {
-        dist[adj] = pot(curr, adj) + cost[curr][adj];
-        parent[adj] = -curr - 1;
-        q.push(make_pair(-dist[adj], adj));
+      if(rem[miny]) {
+        for(int x = 0; x < n; x++) if(s[x]) lx[x] -= rem[miny];
+        for(int y = 0, d = rem[miny]; y < n; y++) {
+          if(rem[y] == -INF) ly[y] += d;
+          else rem[y] -= d;
+        }
+      }
+
+      if(my[miny] == -1) {
+        int cur = miny;
+        while(remx[cur] != st) {
+          int pmate = mx[remx[cur]];
+          my[cur] = remx[cur]; mx[my[cur]] = cur;
+          my[pmate] = -1; cur = pmate;
+        }
+        my[cur] = remx[cur]; mx[my[cur]] = cur;
+      } else {
+        kuhnAdd(my[miny], n); rem[miny] = -INF;
       }
     }
   }
 
-  for(int i = 0; i < gn; i++) { pi[i] += dist[i]; }
-  return dist[dest];
+  int ret = 0;
+  for(int i = 0; i < n; i++)
+    ret += w[i][mx[i]];
+  return ret;
 }
 
-int mcmf(int src, int sink) {
-  memset(flow, false, sizeof(flow));
-  memset(pi, 0, sizeof(pi));
+// --- end kuhn-munkres
 
-  int minCost = 0;
-  while(dijkstra(src, sink) < INF) {
-    for(int v = sink, u = parent[v]; v != src; u = parent[v = u]) {
-      if(flow[v][u]) { flow[v][u] = false; minCost -= cost[v][u]; }
-      else { flow[u][v] = true; minCost += cost[u][v]; }
-    }
-  }
-  return minCost;
-}
+int minCostMatching(int node, int kn, int kp) {
+  memset(w, 0, sizeof(w));
 
-// --- end min-cost max flow
-
-void buildFlowGraph(int node) {
-  cn = adjs[node].size();
-  gn = (cn == 0 ? 0 : cn + k) + 2;
-  int src = gn - 2, sink = gn - 1;
-
-  for(int i = 0; i < gn; i++)
-    gadjs[i].clear();
-
-  if(cn == 0) {
-    gadjs[src].push_back(sink);
-    cost[src][sink] = 0;
-    return;
-  }
-
-  for(int i = 0; i < cn; i++) {
-    gadjs[src].push_back(i);
-    cost[src][i] = 0;
-    for(int kc = 0; kc < k; kc++) {
-      gadjs[i].push_back(cn + kc);
-      gadjs[cn + kc].push_back(i);
-    }
-  }
-
-  for(int kc = 0; kc < k; kc++) {
-    gadjs[cn + kc].push_back(sink);
-    cost[cn + kc][sink] = 0;
-  }
-}
-
-void setFlowGraphCosts(int node, int kn, int kp) {
-  for(int i = 0; i < cn; i++) {
+  for(int i = 0; i < adjs[node].size(); i++) {
     int adj = adjs[node][i];
-    for(int kc = 0; kc < k; kc++) {
-      cost[i][cn + kc] = cost[cn + kc][i] =
-        kc == kp ? INF : dp[adj][kc][kn];
-    }
+    for(int kc = 0; kc < k; kc++)
+      w[i][kc] = kc == kp ? -INF : -dp[adj][kc][kn];
   }
+  return -kuhnMunkres(k);
 }
 
 void solve(int node, int parent) {
@@ -128,8 +100,6 @@ void solve(int node, int parent) {
       solve(adjs[node][i], node); 
     }
   }
-
-  buildFlowGraph(node);
 
   for(int kn = 0; kn < k; kn++) {
     int withPenalty = c[node][kn] + p;
@@ -144,9 +114,8 @@ void solve(int node, int parent) {
     if(parent == -1) {
       dp[node][kn][0] = withPenalty;
       if(adjs[node].size() <= k) {
-        setFlowGraphCosts(node, kn, -1);
         dp[node][kn][0] = min(dp[node][kn][0],
-          c[node][kn] + mcmf(gn - 2, gn - 1));
+          c[node][kn] + minCostMatching(node, kn, -1));
       }
 
     } else {
@@ -155,9 +124,8 @@ void solve(int node, int parent) {
 
       if(adjs[node].size() < k) {
         for(int kp = 0; kp < k; kp++) {
-          setFlowGraphCosts(node, kn, kp);
           dp[node][kn][kp] = min(dp[node][kn][kp],
-            c[node][kn] + mcmf(gn - 2, gn - 1));
+            c[node][kn] + minCostMatching(node, kn, kp));
         }
       }
     }
